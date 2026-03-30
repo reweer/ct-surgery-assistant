@@ -1,6 +1,7 @@
 import cv2
-import os
 import sys
+import os
+import argparse
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -9,24 +10,49 @@ from core.ct_model import CTModel
 from core.controller import Controller
 from interface.viewer import Viewer
 
-# TU ustaw ścieżkę (później zrobimy config)
-DATA_PATH = "/Users/oliwiarewer/Downloads/ct-surgery-assistant/data/ct/Badania/ZAtoki 1/DICOM"
+def main():
+    # Obsługa argumentów linii komend
+    parser = argparse.ArgumentParser(description="CT Surgery Assistant - Przeglądarka skanów DICOM")
+    parser.add_argument(
+        "--study", "-s", 
+        type=int, 
+        choices=[1, 2, 3],
+        default=1,
+        help="Numer badania do wczytania (1, 2 lub 3). Domyślnie: 1"
+    )
+    args = parser.parse_args()
 
-volume = load_dicom_series(DATA_PATH)
-print("Volume shape:", volume.shape)
+    # Konstruowanie ścieżki do danych
+    # base_path to folder 'src'
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(base_path)
+    study_folder = f"zatoki_{args.study}"
+    data_path = os.path.join(project_root, "data", study_folder, "DICOM")
 
-model = CTModel(volume)
-viewer = Viewer()
-controller = Controller(model, viewer)
+    print(f"Wczytywanie badania nr {args.study} z: {data_path}")
 
-# start
-viewer.update(model.get_current_slice())
+    # Wczytywanie danych
+    if not os.path.exists(data_path):
+        print(f"Błąd: Ścieżka '{data_path}' nie istnieje. Upewnij się, że dane są w katalogu data.")
+        sys.exit(1)
 
-while True:
+    volume = load_dicom_series(data_path)
+    print("Volume shape:", volume.shape)
 
-    key = cv2.waitKey(0)
+    model = CTModel(volume)
+    viewer = Viewer()
+    controller = Controller(model, viewer)
 
-    if key == 27:  # ESC
-        break
+    # Pierwszy obraz
+    viewer.update(model.get_current_slice())
 
-    controller.handle_key(key)
+    while True:
+        key = cv2.waitKey(0)
+
+        if key == 27:  # ESC
+            break
+
+        controller.handle_key(key)
+
+if __name__ == "__main__":
+    main()

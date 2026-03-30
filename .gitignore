@@ -1,3 +1,7 @@
 venv/
 data/*
+!data/.gitkeep
 !data/README.txt
+__pycache__/
+*.pyc
+.DS_Store
