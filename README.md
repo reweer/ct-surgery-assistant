@@ -54,11 +54,20 @@ python3 src/main.py --study 2
 | **2** | tryb **soft tissue** (tkanki miękkie) |
 | **ESC** | wyjście |
 
+## Sterowanie głosowe (Model VOSK)
+Projekt wspiera sterowanie głosowe przy użyciu biblioteki **VOSK**.
+
+Model nie jest dołączony do repozytorium ze względu na rozmiar. Każdy użytkownik musi pobrać go lokalnie:
+
+1. Wejdź na stronę: [https://alphacephei.com/vosk/models](https://alphacephei.com/vosk/models)
+2. Pobierz model: `vosk-model-small-en-us-0.15`
+3. Rozpakuj go w głównym katalogu projektu.
+
 ## Struktura projektu
 ```
 src/
 ├── core/         # wczytywanie DICOM i model danych
 ├── interface/    # viewer (OpenCV)
-├── interaction/  # input (voice – do zrobienia)
+├── interaction/  # input (voice)
 └── utils/        # przetwarzanie obrazu
 ```
