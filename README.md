@@ -63,6 +63,13 @@ Model nie jest dołączony do repozytorium ze względu na rozmiar. Każdy użytk
 2. Pobierz model: `vosk-model-small-en-us-0.15`
 3. Rozpakuj go w głównym katalogu projektu.
 
+### Sterowanie głosowe
+Powinno pokazać się 'Listening...'
+| Komenda | Funkcja |
+|--------|--------|
+| **Next** | poprzedni slice |
+| **Previous** | następny slice |
+
 ## Struktura projektu
 ```
 src/
