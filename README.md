@@ -41,8 +41,20 @@ python3 src/main.py --study 2
 ```
 
 ## Sterowanie (w aktywnym oknie "CT Viewer")
-- **`d`**: Następny przekrój (slice)
-- **`a`**: Poprzedni przekrój (slice)
-- **`1`**: Ustawienie okna dla **kości** (bone window)
-- **`2`**: Ustawienie okna dla **tkanek miękkich** (soft tissue window)
-- **`ESC`**: Wyjście z programu
+
+| Klawisz | Funkcja |
+|--------|--------|
+| **a** | poprzedni slice |
+| **d** | następny slice |
+| **1** | tryb **bone** (kości) |
+| **2** | tryb **soft tissue** (tkanki miękkie) |
+| **ESC** | wyjście |
+
+## Struktura projektu
+```
+src/
+├── core/         # wczytywanie DICOM i model danych
+├── interface/    # viewer (OpenCV)
+├── interaction/  # input (voice – do zrobienia)
+└── utils/        # przetwarzanie obrazu
+```

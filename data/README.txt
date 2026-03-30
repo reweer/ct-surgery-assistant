@@ -1,0 +1,1 @@
+Tu dodaj dane DICOM (data/ct/)
