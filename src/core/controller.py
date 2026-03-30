@@ -18,4 +18,7 @@ class Controller:
         elif key == ord("2"):
             self.viewer.set_soft_window()
 
+        self.update_view()
+
+    def update_view(self):
         self.viewer.update(self.model.get_current_slice())

@@ -1,5 +1,5 @@
 import cv2
-import numpy as np
+from utils.image_utils import apply_window
 
 class Viewer:
 
@@ -7,23 +7,13 @@ class Viewer:
         self.window_center = 40
         self.window_width = 400
 
-    def apply_window(self, image):
-
-        image = image.astype("float32")
-
-        min_val = self.window_center - self.window_width // 2
-        max_val = self.window_center + self.window_width // 2
-
-        image = np.clip(image, min_val, max_val)
-
-        image = (image - min_val) / (max_val - min_val)
-        image = (image * 255).astype("uint8")
-
-        return image
-
     def update(self, image):
 
-        image = self.apply_window(image)
+        image = apply_window(
+            image,
+            self.window_center,
+            self.window_width
+        )
 
         cv2.imshow("CT Viewer", image)
         cv2.waitKey(1)

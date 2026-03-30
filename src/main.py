@@ -1,11 +1,6 @@
-import sys
-import os
-sys.path.append(os.path.dirname(__file__))
-
-
 import cv2
-import sys
 import os
+import sys
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -14,16 +9,17 @@ from core.ct_model import CTModel
 from core.controller import Controller
 from interface.viewer import Viewer
 
-#TU ustaw ścieżkę do danych
-volume = load_dicom_series("/Users/oliwiarewer/Downloads/ct-surgery-assistant/data/ct/Badania/ZAtoki 1/DICOM")
+# TU ustaw ścieżkę (później zrobimy config)
+DATA_PATH = "/Users/oliwiarewer/Downloads/ct-surgery-assistant/data/ct/Badania/ZAtoki 1/DICOM"
 
+volume = load_dicom_series(DATA_PATH)
 print("Volume shape:", volume.shape)
 
 model = CTModel(volume)
 viewer = Viewer()
 controller = Controller(model, viewer)
 
-# pierwszy obraz
+# start
 viewer.update(model.get_current_slice())
 
 while True:
