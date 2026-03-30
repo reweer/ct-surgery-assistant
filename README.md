@@ -2,21 +2,25 @@
 
 Proste narzędzie do przeglądania skanów tomografii komputerowej (CT) w formacie DICOM.
 
-## Instalacja
-Zaleca się użycie środowiska wirtualnego, szczególnie na systemach macOS i Linux:
+## Setup (pierwsze uruchomienie)
 
-1. Stwórz środowisko wirtualne:
-   ```bash
-   python3 -m venv venv
-   ```
-2. Aktywuj środowisko:
-   ```bash
-   source venv/bin/activate
-   ```
-3. Zainstaluj wymagane biblioteki:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 1. Sklonuj repozytorium
+```bash
+git clone https://github.com/reweer/ct-surgery-assistant.git
+cd ct-surgery-assistant
+```
+
+### 2. Stwórz środowisko wirtualne
+Zaleca się użycie środowiska wirtualnego, szczególnie na systemach macOS i Linux:
+```bash
+python3 -m venv venv
+```
+
+### 3. Aktywuj środowisko i zainstaluj biblioteki
+```bash
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
 ## Konfiguracja danych
 1. Folder `data` znajduje się w głównym katalogu projektu (`ct-surgery-assistant/data`).
