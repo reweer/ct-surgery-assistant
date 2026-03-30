@@ -1,2 +1,5 @@
-venv/
-data/
+data/*
+!data/.gitkeep
+__pycache__/
+*.pyc
+.DS_Store
