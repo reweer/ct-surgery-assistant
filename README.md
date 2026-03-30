@@ -37,6 +37,19 @@ W pliku main.py ustaw ścieżkę do danych:
 ```
 DATA_PATH = "data/ct/Badania/Zatoki 1/DICOM"
 ```
+## Model VOSK
+Sterowanie głosowe wykorzystuje bibliotekę **VOSK**.
+
+Model nie jest dołączony do repozytorium (duży rozmiar), więc każdy musi pobrać go lokalnie.
+
+### Pobranie modelu
+1. Wejdź na:
+https://alphacephei.com/vosk/models
+
+2. Pobierz model:
+```
+vosk-model-small-en-us-0.15
+```
 
 Następnie uruchom:
 ```
