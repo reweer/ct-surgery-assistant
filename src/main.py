@@ -9,50 +9,75 @@ from core.dicom_loader import load_dicom_series
 from core.ct_model import CTModel
 from core.controller import Controller
 from interface.viewer import Viewer
+from interaction.voice import VoiceController
+
 
 def main():
-    # Obsługa argumentów linii komend
-    parser = argparse.ArgumentParser(description="CT Surgery Assistant - Przeglądarka skanów DICOM")
+    # 🔹 argumenty (wybór badania)
+    parser = argparse.ArgumentParser(description="CT Surgery Assistant")
     parser.add_argument(
-        "--study", "-s", 
-        type=int, 
+        "--study", "-s",
+        type=int,
         choices=[1, 2, 3],
         default=1,
-        help="Numer badania do wczytania (1, 2 lub 3). Domyślnie: 1"
+        help="Numer badania (1, 2, 3)"
     )
     args = parser.parse_args()
 
-    # Konstruowanie ścieżki do danych
-    # base_path to folder 'src'
+    # 🔹 ścieżka do danych
     base_path = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(base_path)
     study_folder = f"zatoki_{args.study}"
     data_path = os.path.join(project_root, "data", study_folder, "DICOM")
 
-    print(f"Wczytywanie badania nr {args.study} z: {data_path}")
+    print(f"Loading study {args.study} from: {data_path}")
 
-    # Wczytywanie danych
     if not os.path.exists(data_path):
-        print(f"Błąd: Ścieżka '{data_path}' nie istnieje. Upewnij się, że dane są w katalogu data.")
+        print("❌ Data path does not exist")
         sys.exit(1)
 
+    # 🔹 load danych
     volume = load_dicom_series(data_path)
     print("Volume shape:", volume.shape)
 
+    # 🔹 inicjalizacja
     model = CTModel(volume)
     viewer = Viewer()
     controller = Controller(model, viewer)
+    voice = VoiceController()
 
-    # Pierwszy obraz
+    # 🔹 pierwszy obraz
     viewer.update(model.get_current_slice())
 
     while True:
-        key = cv2.waitKey(0)
+
+        # 🔹 klawiatura (non-blocking)
+        key = cv2.waitKey(1)
 
         if key == 27:  # ESC
             break
 
-        controller.handle_key(key)
+        if key != -1:
+            controller.handle_key(key)
+
+        # 🔹 voice
+        command = voice.listen()
+
+        if "next" in command:
+            model.next_slice()
+
+        elif "previous" in command:
+            model.previous_slice()
+
+        elif "bone" in command:
+            viewer.set_bone_window()
+
+        elif "soft" in command:
+            viewer.set_soft_window()
+
+        # 🔹 update
+        viewer.update(model.get_current_slice())
+
 
 if __name__ == "__main__":
     main()

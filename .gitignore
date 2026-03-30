@@ -1,7 +1,9 @@
 venv/
 data/*
-!data/.gitkeep
 !data/README.txt
+
+models/
+
 __pycache__/
 *.pyc
 .DS_Store
