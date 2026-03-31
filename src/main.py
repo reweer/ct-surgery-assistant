@@ -49,34 +49,46 @@ def main():
     # 🔹 pierwszy obraz
     viewer.update(model.get_current_slice())
 
+
+    needs_update = True
+
     while True:
 
-        # 🔹 klawiatura (non-blocking)
         key = cv2.waitKey(1)
 
-        if key == 27:  # ESC
+        if key == 27:
             break
 
         if key != -1:
             controller.handle_key(key)
+            needs_update = True
 
-        # 🔹 voice
-        command = voice.listen()
+        command = voice.last_command
 
-        if "next" in command:
-            model.next_slice()
+        if command:
+            voice.last_command = None
 
-        elif "previous" in command:
-            model.previous_slice()
+            if "next" in command:
+                model.next_slice()
+                needs_update = True
 
-        elif "bone" in command:
-            viewer.set_bone_window()
+            elif "previous" in command or "back" in command:
+                model.previous_slice()
+                needs_update = True
 
-        elif "soft" in command:
-            viewer.set_soft_window()
+            elif "bone" in command:
+                viewer.set_bone_window()
+                needs_update = True
 
-        # 🔹 update
-        viewer.update(model.get_current_slice())
+            elif "soft" in command:
+                viewer.set_soft_window()
+                needs_update = True
+
+        #tylko gdy coś się zmieniło
+        if needs_update:
+            viewer.update(model.get_current_slice())
+            needs_update = False
+
 
 
 if __name__ == "__main__":
