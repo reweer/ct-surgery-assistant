@@ -36,47 +36,46 @@ def main():
         print("❌ Data path does not exist")
         sys.exit(1)
 
-    # 🔹 load danych
+    # load danych
     volume = load_dicom_series(data_path)
     print("Volume shape:", volume.shape)
 
-    # 🔹 inicjalizacja
+    # inicjalizacja
     model = CTModel(volume)
     viewer = Viewer()
     controller = Controller(model, viewer)
     voice = VoiceController()
 
-    # 🔹 pierwszy obraz
-    viewer.update(model.get_current_slice())
+    #pierwszy obraz
+    #viewer.update(model.get_current_slice())
+
+    needs_update = True
 
     while True:
 
-        # 🔹 klawiatura (non-blocking)
         key = cv2.waitKey(1)
 
-        if key == 27:  # ESC
+        if key == 27:
             break
 
         if key != -1:
-            controller.handle_key(key)
+            if controller.handle_key(key):
+                needs_update = True
 
-        # 🔹 voice
-        command = voice.listen()
+        command = voice.last_command
 
-        if "next" in command:
-            model.next_slice()
+        if command:
+            voice.last_command = None
 
-        elif "previous" in command:
-            model.previous_slice()
+            if controller.handle_voice(command):
+                needs_update = True
+        #render tylko gdy cos sie zmienilo
+        if needs_update:
+            controller.update_view()
+            needs_update = False
 
-        elif "bone" in command:
-            viewer.set_bone_window()
 
-        elif "soft" in command:
-            viewer.set_soft_window()
 
-        # 🔹 update
-        viewer.update(model.get_current_slice())
 
 
 if __name__ == "__main__":
