@@ -4,31 +4,34 @@ class Controller:
         self.model = model
         self.viewer = viewer
 
-    # 🔹 keyboard
+# 🔹 keyboard
     def handle_key(self, key):
         changed = False
 
-        if key == ord("d"):
+        if key == "d":
             self.model.next_slice()
             changed = True
 
-        elif key == ord("a"):
+        elif key == "a":
             self.model.previous_slice()
             changed = True
 
-        elif key == ord("1"):
+        elif key == "1":
             self.viewer.set_bone_window()
             changed = True
 
-        elif key == ord("2"):
+        elif key == "2":
             self.viewer.set_soft_window()
             changed = True
 
         return changed
 
+
+
     # 🔹 voice
     def handle_voice(self, command):
         changed = False
+        command = command.lower().strip()
 
         if "next" in command:
             self.model.next_slice()
@@ -46,8 +49,16 @@ class Controller:
             self.viewer.set_soft_window()
             changed = True
 
+        elif "one" in command:
+            self.viewer.set_bone_window()
+            changed = True
+
+        elif "two" in command:
+            self.viewer.set_soft_window()
+            changed = True
+
         return changed
 
     # 🔹 render
     def update_view(self):
-        self.viewer.update(self.model.get_current_slice())
+        self.viewer.set_image(self.model.get_current_slice())
