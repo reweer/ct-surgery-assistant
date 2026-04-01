@@ -14,7 +14,7 @@ class VoiceController:
         self.commands = queue.Queue()
         self.running = True
 
-        # 🔥 start thread
+        #  start thread
         self.thread = threading.Thread(target=self._listen_loop)
         self.thread.daemon = True
         self.thread.start()

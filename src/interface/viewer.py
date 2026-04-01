@@ -1,11 +1,7 @@
 from PySide6.QtWidgets import QLabel, QApplication
-from PySide6.QtGui import QImage, QPixmap
+from PySide6.QtGui import QImage, QPixmap, QPainter, QFont, QColor
 from PySide6.QtCore import Qt
-import numpy as np
-import cv2
-from PySide6.QtGui import QPainter, QFont, QColor
 from utils.image_utils import apply_window
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
 
 
 class Viewer(QLabel):
@@ -16,21 +12,32 @@ class Viewer(QLabel):
         self.window_center = 40
         self.window_width = 400
 
-        self.setMinimumSize(800, 800)
         self.setScaledContents(False)
         self.setAlignment(Qt.AlignCenter)
         self.setStyleSheet("background-color: black;")
+        self.setMinimumSize(200, 200)
 
         self.controller = None  # 🔥 podpinamy z main
         self.setFocusPolicy(Qt.StrongFocus)
         self.setFocus()
+        self.current_image = None
 
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
 
+        if self.current_image is not None:
+            self._render_current_image()
 
     def set_image(self, image):
+        self.current_image = image
+        self._render_current_image()
+
+    def _render_current_image(self):
+        if self.current_image is None:
+            return
 
         image = apply_window(
-            image,
+            self.current_image,
             self.window_center,
             self.window_width
         )
@@ -46,42 +53,10 @@ class Viewer(QLabel):
         )
 
         pixmap = QPixmap.fromImage(q_image)
-        pixmap = pixmap.scaled(
-            self.size(),
-            Qt.KeepAspectRatio,
-            Qt.SmoothTransformation
-        )
 
-
-        self.setPixmap(pixmap)
-
-
-    def set_image(self, image):
-
-        image = apply_window(
-            image,
-            self.window_center,
-            self.window_width
-        )
-
-        h, w = image.shape
-
-        # konwersja do QImage
-        q_image = QImage(
-            image.data,
-            w,
-            h,
-            w,
-            QImage.Format_Grayscale8
-        )
-
-        pixmap = QPixmap.fromImage(q_image)
-
-        # rozmiar widgetu
         widget_w = self.width()
         widget_h = self.height()
 
-        # skalowanie z zachowaniem proporcji
         scaled = pixmap.scaled(
             widget_w,
             widget_h,
@@ -89,11 +64,9 @@ class Viewer(QLabel):
             Qt.SmoothTransformation
         )
 
-        # 🔥 czarne tło (canvas)
         final_pixmap = QPixmap(widget_w, widget_h)
         final_pixmap.fill(Qt.black)
 
-        # wklejenie obrazu na środek
         painter = QPainter(final_pixmap)
 
         x = (widget_w - scaled.width()) // 2
@@ -101,16 +74,17 @@ class Viewer(QLabel):
 
         painter.drawPixmap(x, y, scaled)
 
-    # TEKST W CZARNYM OBSZARZE
         painter.setPen(QColor(0, 255, 0))
-        painter.setFont(QFont("Inter", 20, QFont.Bold))
+        painter.setFont(QFont("Helvetica", 20, QFont.Bold))
 
-        index = self.controller.model.index
-        total = len(self.controller.model.volume)
 
-        text = f"Slice: {index+1} / {total}"
+        if self.controller is not None:
+            index = self.controller.model.get_current_index()
+            total = self.controller.model.get_total_slices()
+            text = f"Slice: {index + 1} / {total}"
+            painter.drawText(20, 30, text)
 
-        painter.drawText(20, 30, text)  # ← zawsze w górnym czarnym obszarze
+
 
         painter.end()
 
@@ -125,7 +99,7 @@ class Viewer(QLabel):
         self.window_center = 40
         self.window_width = 400
 
-    # 🔥 keyboard (POPRAWNIE)
+    #  keyboard 
     def keyPressEvent(self, event):
 
         if self.controller is None:

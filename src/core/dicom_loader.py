@@ -23,7 +23,7 @@ def load_dicom_series(folder):
 
     print(f"Found {len(series)} series")
 
-    # 🔥 wybieramy NAJWIĘKSZĄ serię (najwięcej slice)
+    # wybieramy NAJWIĘKSZĄ serię (najwięcej slice)
     largest_series = max(series.values(), key=len)
 
     print(f"Using series with {len(largest_series)} slices")
