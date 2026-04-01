@@ -69,6 +69,8 @@ Powinno pokazać się 'Listening...'
 |--------|--------|
 | **Next** | poprzedni slice |
 | **Previous** | następny slice |
+| **Bone** | tryb **bone** (kości) |
+| **Soft** | tryb **soft tissue** (tkanki miękkie) |
 
 ## Struktura projektu
 ```
