@@ -4,50 +4,67 @@ class Controller:
         self.model = model
         self.viewer = viewer
 
-    # 🔹 keyboard
     def handle_key(self, key):
-        changed = False
+        if key == "d":
+            return self.execute_action("next")
 
-        if key == ord("d"):
-            self.model.next_slice()
-            changed = True
+        elif key == "a":
+            return self.execute_action("previous")
 
-        elif key == ord("a"):
-            self.model.previous_slice()
-            changed = True
+        elif key == "1":
+            return self.execute_action("bone")
 
-        elif key == ord("1"):
-            self.viewer.set_bone_window()
-            changed = True
+        elif key == "2":
+            return self.execute_action("soft")
 
-        elif key == ord("2"):
-            self.viewer.set_soft_window()
-            changed = True
+        return False
 
-        return changed
+    def normalize_command(self, command):
+        command = command.lower().strip()
 
-    # 🔹 voice
+        filler_words = {"go", "please", "to"}
+        words = command.split()
+        words = [word for word in words if word not in filler_words]
+
+        return " ".join(words)
+
     def handle_voice(self, command):
-        changed = False
+        command = self.normalize_command(command)
 
         if "next" in command:
+            return self.execute_action("next")
+
+        elif "previous" in command or "back" in command:
+            return self.execute_action("previous")
+
+        elif "bone" in command or "one" in command:
+            return self.execute_action("bone")
+
+        elif "soft" in command or "two" in command:
+            return self.execute_action("soft")
+
+        return False
+
+    def execute_action(self, action):
+        changed = False
+
+        if action == "next":
             self.model.next_slice()
             changed = True
 
-        elif "previous" in command or "back" in command:
+        elif action == "previous":
             self.model.previous_slice()
             changed = True
 
-        elif "bone" in command:
+        elif action == "bone":
             self.viewer.set_bone_window()
             changed = True
 
-        elif "soft" in command:
+        elif action == "soft":
             self.viewer.set_soft_window()
             changed = True
 
         return changed
 
-    # 🔹 render
     def update_view(self):
-        self.viewer.update(self.model.get_current_slice())
+        self.viewer.set_image(self.model.get_current_slice())

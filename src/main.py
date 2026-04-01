@@ -1,7 +1,8 @@
-import cv2
 import sys
 import os
 import argparse
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QLabel
+from PySide6.QtCore import QTimer
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -13,67 +14,60 @@ from interaction.voice import VoiceController
 
 
 def main():
-    # 🔹 argumenty (wybór badania)
-    parser = argparse.ArgumentParser(description="CT Surgery Assistant")
-    parser.add_argument(
-        "--study", "-s",
-        type=int,
-        choices=[1, 2, 3],
-        default=1,
-        help="Numer badania (1, 2, 3)"
-    )
+
+    app = QApplication(sys.argv)
+
+    # argumenty + path
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--study", "-s", type=int, default=1)
     args = parser.parse_args()
 
-    # 🔹 ścieżka do danych
     base_path = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(base_path)
     study_folder = f"zatoki_{args.study}"
     data_path = os.path.join(project_root, "data", study_folder, "DICOM")
 
-    print(f"Loading study {args.study} from: {data_path}")
-
-    if not os.path.exists(data_path):
-        print("❌ Data path does not exist")
-        sys.exit(1)
-
-    # load danych
     volume = load_dicom_series(data_path)
-    print("Volume shape:", volume.shape)
 
-    # inicjalizacja
     model = CTModel(volume)
     viewer = Viewer()
     controller = Controller(model, viewer)
     voice = VoiceController()
 
-    #pierwszy obraz
-    #viewer.update(model.get_current_slice())
+    viewer.controller = controller
 
-    needs_update = True
+    # NOWY BLOK UI 
+    window = QMainWindow()
+    window.setCentralWidget(viewer)
 
-    while True:
+    window.resize(1000, 800)
+    window.show()
 
-        key = cv2.waitKey(1)
+    viewer.setFocus()
 
-        if key == 27:
-            break
+    #  pierwszy render
+    controller.update_view()
+    
 
-        if key != -1:
-            if controller.handle_key(key):
-                needs_update = True
+    #  TIMER (voice loop)
+    def check_voice():
 
-        command = voice.last_command
+        changed = False
 
-        if command:
-            voice.last_command = None
+        while not voice.commands.empty():
+            command = voice.commands.get()
 
             if controller.handle_voice(command):
-                needs_update = True
-        #render tylko gdy cos sie zmienilo
-        if needs_update:
-            controller.update_view()
-            needs_update = False
+                changed = True
 
+        if changed:
+            controller.update_view()
+
+    timer = QTimer()
+    timer.timeout.connect(check_voice)
+    timer.start(50)
+
+    sys.exit(app.exec())
 
 
 

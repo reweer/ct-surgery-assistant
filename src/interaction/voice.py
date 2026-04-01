@@ -11,10 +11,10 @@ class VoiceController:
         self.model = Model(model_path)
         self.rec = KaldiRecognizer(self.model, 16000)
 
-        self.last_command = None
+        self.commands = queue.Queue()
         self.running = True
 
-        # 🔥 start thread
+        #  start thread
         self.thread = threading.Thread(target=self._listen_loop)
         self.thread.daemon = True
         self.thread.start()
@@ -42,6 +42,6 @@ class VoiceController:
                     result = json.loads(self.rec.Result())
                     text = result.get("text", "")
 
-                    if text and self.last_command is None:
+                    if text:
                         print("You said:", text)
-                        self.last_command = text
+                        self.commands.put(text)
