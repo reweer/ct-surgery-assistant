@@ -64,7 +64,7 @@ Model nie jest dołączony do repozytorium ze względu na rozmiar. Każdy użytk
 3. Rozpakuj go w głównym katalogu projektu.
 
 ### Sterowanie głosowe
-Powinno pokazać się 'Listening...'
+Powinno pokazać się 'Voice thread running...'
 | Komenda | Funkcja |
 |--------|--------|
 | **Next** | poprzedni slice |
