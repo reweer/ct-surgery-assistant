@@ -22,6 +22,14 @@ def main():
     parser.add_argument("--study", "-s", type=int, default=1)
     args = parser.parse_args()
 
+    # Kalibracja dla poszczególnych badań
+    calibrations = {
+        1: -6.0,
+        2: -4.0,
+        3: -90.0
+    }
+    rotation = calibrations.get(args.study, 0.0)
+
     base_path = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(base_path)
     study_folder = f"zatoki_{args.study}"
@@ -31,6 +39,7 @@ def main():
 
     model = CTModel(volume)
     viewer = Viewer()
+    viewer.rotation = rotation
     controller = Controller(model, viewer)
     voice = VoiceController()
 

@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QLabel, QApplication
 from PySide6.QtGui import QImage, QPixmap, QPainter, QFont, QColor
 from PySide6.QtCore import Qt
-from utils.image_utils import apply_window
+from utils.image_utils import apply_window, rotate_image
 
 
 class Viewer(QLabel):
@@ -11,6 +11,7 @@ class Viewer(QLabel):
 
         self.window_center = 40
         self.window_width = 400
+        self.rotation = 0
 
         self.setScaledContents(False)
         self.setAlignment(Qt.AlignCenter)
@@ -41,6 +42,9 @@ class Viewer(QLabel):
             self.window_center,
             self.window_width
         )
+
+        if self.rotation != 0:
+            image = rotate_image(image, self.rotation)
 
         h, w = image.shape
 
