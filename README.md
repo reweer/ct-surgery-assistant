@@ -1,6 +1,6 @@
 # CT Surgery Assistant
 
-Proste narzędzie do przeglądania skanów tomografii komputerowej (CT) w formacie DICOM.
+Proste narzędzie do przeglądania skanów tomografii komputerowej (CT) w formacie DICOM z obsługą sterowania głosowego.
 
 ## Setup (pierwsze uruchomienie)
 
@@ -11,7 +11,6 @@ cd ct-surgery-assistant
 ```
 
 ### 2. Stwórz środowisko wirtualne
-Zaleca się użycie środowiska wirtualnego, szczególnie na systemach macOS i Linux:
 ```bash
 python3 -m venv venv
 ```
@@ -22,30 +21,38 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Konfiguracja danych
-1. Folder `data` znajduje się w głównym katalogu projektu (`ct-surgery-assistant/data`).
-2. Dane są zorganizowane w podfolderach:
-   - `data/zatoki_1/DICOM`
-   - `data/zatoki_2/DICOM`
-   - `data/zatoki_3/DICOM`
-*Uwaga: Pliki DICOM są ignorowane przez Git i nie zostaną wysłane do repozytorium.*
+### 4. Konfiguracja Mikrofonu (Ważne!)
+Aby uniknąć problemów z niewłaściwym urządzeniem wejściowym (np. słuchawki vs wbudowany mikrofon), uruchom:
+```bash
+python3 setup_audio.py
+```
+Skrypt wyświetli listę dostępnych urządzeń i pozwoli Ci wybrać to, którego chcesz używać. Wybór zostanie zapisany lokalnie w pliku `config.json` (plik indywidyalny dla kazdego, tworzony przy pierwszym uruchomieniu `setup_audio.py` - ignorowany przez git).
+
+## Sterowanie Głosowe (Model VOSK)
+Projekt wymaga modelu VOSK. Możesz go pobrać i wypakować za pomocą poniższych komend:
+
+```bash
+mkdir -p models
+curl -L https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip -o models/model.zip
+unzip models/model.zip -d models/
+```
+
+Przykładowy wynik w terminalu:
+```text
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 39.2M  100 39.2M    0     0  21.6M      0  0:00:01  0:00:01 --:--:-- 21.6M
+Archive:  models/model.zip
+```
 
 ## Uruchamianie
-*Pamiętaj, aby przed uruchomieniem zawsze aktywować środowisko komendą `source venv/bin/activate`.*
-
-Aby uruchomić aplikację z domyślnym badaniem (nr 1):
 ```bash
-python3 src/main.py
+python3 src/main.py --study 1
 ```
 
-### Wybór konkretnego badania
-Możesz wybrać badanie (1, 2 lub 3) używając flagi `--study` lub `-s`:
-```bash
-python3 src/main.py --study 2
-```
+## Sterowanie
 
-## Sterowanie (w aktywnym oknie "CT Viewer")
-
+### Klawiatura
 | Klawisz | Funkcja |
 |--------|--------|
 | **a** | poprzedni slice |
@@ -54,29 +61,31 @@ python3 src/main.py --study 2
 | **2** | tryb **soft tissue** (tkanki miękkie) |
 | **ESC** | wyjście |
 
-## Sterowanie głosowe (Model VOSK)
-Projekt wspiera sterowanie głosowe przy użyciu biblioteki **VOSK**.
+### Komendy Głosowe (Język Angielski)
+Mów wyraźnie do mikrofonu po pojawieniu się komunikatu `🎤 Voice thread running...`.
 
-Model nie jest dołączony do repozytorium ze względu na rozmiar. Każdy użytkownik musi pobrać go lokalnie:
+| Komenda | Funkcja | Przykład |
+|--------|--------|--------|
+| **Next / Previous** | Przeskok o 1 slice | "next", "back" |
+| **Next X / Back X** | Przeskok o X sliców | "next five", "back twenty" |
+| **Slice X** | Skok do konkretnego numeru | "slice fifty", "slice 10" |
+| **First / Last / Middle** | Skok do granic badania | "first slice", "middle slice" |
+| **Bone / Soft** | Zmiana okna widoku | "bone window", "soft" |
 
-1. Wejdź na stronę: [https://alphacephei.com/vosk/models](https://alphacephei.com/vosk/models)
-2. Pobierz model: `vosk-model-small-en-us-0.15`
-3. Rozpakuj go w głównym katalogu projektu.
+*Obsługiwane liczby słownie: zero - hundred, thousand.*
 
-### Sterowanie głosowe
-Powinno pokazać się 'Voice thread running...'
-| Komenda | Funkcja |
-|--------|--------|
-| **Next** | poprzedni slice |
-| **Previous** | następny slice |
-| **Bone** | tryb **bone** (kości) |
-| **Soft** | tryb **soft tissue** (tkanki miękkie) |
+## Testowanie
+Skrypt testowy nawigacji:
+```bash
+python3 tests/test_navigation.py
+```
+Pełen scenariusz testowy znajduje się w pliku `TESTING_SCENARIO.md`.
 
 ## Struktura projektu
 ```
 src/
-├── core/         # wczytywanie DICOM i model danych
-├── interface/    # viewer (OpenCV)
-├── interaction/  # input (voice)
+├── core/         # wczytywanie DICOM, model danych i kontroler
+├── interface/    # viewer (PySide6)
+├── interaction/  # obsługa głosu (Vosk)
 └── utils/        # przetwarzanie obrazu
 ```
