@@ -11,11 +11,13 @@ cd ct-surgery-assistant
 ```
 
 ### 2. Stwórz środowisko wirtualne
+Zaleca się użycie środowiska wirtualnego:
 ```bash
 python3 -m venv venv
 ```
 
 ### 3. Aktywuj środowisko i zainstaluj biblioteki
+*Pamiętaj, aby przed uruchomieniem zawsze aktywować środowisko komendą `source venv/bin/activate`.*
 ```bash
 source venv/bin/activate
 pip install -r requirements.txt
@@ -28,6 +30,15 @@ python3 setup_audio.py
 ```
 Skrypt wyświetli listę dostępnych urządzeń i pozwoli Ci wybrać to, którego chcesz używać. Wybór zostanie zapisany lokalnie w pliku `config.json` (plik indywidyalny dla kazdego, tworzony przy pierwszym uruchomieniu `setup_audio.py` - ignorowany przez git).
 
+## Konfiguracja danych
+1. Folder `data` znajduje się w głównym katalogu projektu (`ct-surgery-assistant/data`).
+2. Dane są zorganizowane w podfolderach:
+   - `data/zatoki_1/DICOM`
+   - `data/zatoki_2/DICOM`
+   - `data/zatoki_3/DICOM`
+
+*Uwaga: Pliki DICOM są ignorowane przez Git i nie zostaną wysłane do repozytorium.*
+
 ## Sterowanie Głosowe (Model VOSK)
 Projekt wymaga modelu VOSK. Możesz go pobrać i wypakować za pomocą poniższych komend:
 
@@ -37,17 +48,18 @@ curl -L https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip -o m
 unzip models/model.zip -d models/
 ```
 
-Przykładowy wynik w terminalu:
-```text
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100 39.2M  100 39.2M    0     0  21.6M      0  0:00:01  0:00:01 --:--:-- 21.6M
-Archive:  models/model.zip
+## Uruchamianie
+*Pamiętaj, aby przed uruchomieniem zawsze aktywować środowisko komendą `source venv/bin/activate`.*
+
+Aby uruchomić aplikację z domyślnym badaniem (nr 1):
+```bash
+python3 src/main.py
 ```
 
-## Uruchamianie
+### Wybór konkretnego badania
+Możesz wybrać badanie (1, 2 lub 3) używając flagi `--study` lub `-s`:
 ```bash
-python3 src/main.py --study 1
+python3 src/main.py --study 2
 ```
 
 ## Sterowanie
@@ -79,7 +91,7 @@ Skrypt testowy nawigacji:
 ```bash
 python3 tests/test_navigation.py
 ```
-Pełen scenariusz testowy znajduje się w pliku `TESTING_SCENARIO.md`.
+Pełen scenariusz testowy (manualny) znajduje się w pliku `TESTING_SCENARIO.md`.
 
 ## Struktura projektu
 ```
