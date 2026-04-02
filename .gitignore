@@ -3,6 +3,7 @@ data/*
 !data/README.txt
 
 models/
+config.json
 
 __pycache__/
 *.pyc

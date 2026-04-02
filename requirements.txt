@@ -1,3 +1,6 @@
 opencv-python
 pydicom
 numpy
+PySide6
+sounddevice
+vosk
