@@ -4,6 +4,7 @@ from PySide6.QtCore import Qt
 from utils.image_utils import apply_window, rotate_image
 
 
+
 class Viewer(QLabel):
 
     def __init__(self):
@@ -95,14 +96,53 @@ class Viewer(QLabel):
         self.setPixmap(final_pixmap)
     
 
+    #def set_bone_window(self):
+     #   self.window_center = 300
+      #  self.window_width = 1500
+
+   # def set_soft_window(self):
+    #    self.window_center = 40
+     #   self.window_width = 400
+    # --- POPRAWIONE PRESETY MEDYCZNE ---
+    
     def set_bone_window(self):
-        self.window_center = 300
-        self.window_width = 1500
+        self.window_center = 600
+        self.window_width = 2000
+        # Jeśli masz suwaki, zaktualizuj ich pozycję tutaj:
+        if hasattr(self, 'bright_slider'):
+            self.bright_slider.setValue(600)
+            self.contrast_slider.setValue(2000)
+        self._render_current_image()
 
     def set_soft_window(self):
         self.window_center = 40
         self.window_width = 400
+        # Jeśli masz suwaki, zaktualizuj ich pozycję tutaj:
+        if hasattr(self, 'bright_slider'):
+            self.bright_slider.setValue(40)
+            self.contrast_slider.setValue(400)
+        self._render_current_image()
+    def set_sinus_window(self):
+        """Optymalne okno do operacji zatok (Sinus Window)."""
+        self.window_center = 300
+        self.window_width = 2500
+        self._render_current_image()
 
+    def change_window(self, center_delta=0, width_delta=0):
+        """
+        Zmienia parametry okna o konkretną wartość i odświeża obraz.
+        Wywoływana przez Controller przy komendach głosowych.
+        """
+        self.window_center += center_delta
+        self.window_width += width_delta
+        
+        # Zabezpieczenie przed ujemną szerokością okna
+        if self.window_width < 1:
+            self.window_width = 1
+            
+        print(f"[VIEWER] Window updated: Center={self.window_center}, Width={self.window_width}")
+        self._render_current_image()
+    
     #  keyboard 
     def keyPressEvent(self, event):
 
@@ -123,6 +163,8 @@ class Viewer(QLabel):
 
         elif key == Qt.Key_2:
             changed = self.controller.handle_key("2")
+        elif key == Qt.Key_3:
+            changed = self.controller.handle_key("3")
 
         elif key == Qt.Key_Escape:
             QApplication.quit()
