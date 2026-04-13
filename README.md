@@ -98,14 +98,48 @@ Mów wyraźnie do mikrofonu po pojawieniu się komunikatu `🎤 Voice thread run
 | **Center**                      | Powrót do domyślnego widoku (środek obrazu) | "center"                       |
 
 
-*Obsługiwane liczby słownie: zero - hundred, thousand.*
+
+### Parser komend głosowych
+
+System zawiera warstwę parsera komend, która:
+	•	normalizuje tekst wejściowy,
+	•	ignoruje wybrane słowa typu go, please, to,
+	•	obsługuje liczby zapisane cyframi i słownie,
+	•	mapuje część typowych błędów rozpoznawania mowy,
+	•	zamienia komendę na ustandaryzowaną akcję.
+
+Przykłady
+	•	go next please → next
+	•	next five → ruch o +5
+	•	back ten → ruch o -10
+	•	slice 120 → skok do slice’a 120
+	•	zoom in a lot → szybsze powiększenie
+
+### Obsługiwane liczby słownie
+
+Obsługiwane są podstawowe liczby słownie, m.in.:
+	•	zero–nineteen
+	•	twenty, thirty, …, ninety
+	•	hundred
+	•	thousand
+
 
 ## Testowanie
-Skrypt testowy nawigacji:
+1. Skrypt testowy nawigacji:
 ```bash
 python3 tests/test_navigation.py
 ```
 Pełen scenariusz testowy (manualny) znajduje się w pliku `TESTING_SCENARIO.md`.
+
+2. Test parsera:
+```bash
+pytest tests/test_parser.py -v
+```
+
+3. Test integracyjny komend głosowych:
+```bash
+python3 tests/test_navigation.py
+```
 
 ## Struktura projektu
 ```
@@ -114,4 +148,16 @@ src/
 ├── interface/    # viewer (PySide6)
 ├── interaction/  # obsługa głosu (Vosk)
 └── utils/        # przetwarzanie obrazu
+```
+
+Dodatkowe Pliki:
+```
+tests/
+├── test_navigation.py
+├── test_parser.py
+└── test_voice_integration.py
+
+setup_audio.py
+config.json
+testing_scenario.md
 ```
