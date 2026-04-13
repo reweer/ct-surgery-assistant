@@ -102,13 +102,19 @@ Mów wyraźnie do mikrofonu po pojawieniu się komunikatu `🎤 Voice thread run
 ### Parser komend głosowych
 
 System zawiera warstwę parsera komend, która:
+
 	•	normalizuje tekst wejściowy,
+	
 	•	ignoruje wybrane słowa typu go, please, to,
+	
 	•	obsługuje liczby zapisane cyframi i słownie,
+	
 	•	mapuje część typowych błędów rozpoznawania mowy,
+	
 	•	zamienia komendę na ustandaryzowaną akcję.
 
 Przykłady
+
 	•	go next please → next
 	•	next five → ruch o +5
 	•	back ten → ruch o -10
