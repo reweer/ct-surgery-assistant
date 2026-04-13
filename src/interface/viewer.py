@@ -13,6 +13,12 @@ class Viewer(QLabel):
         self.window_center = 40
         self.window_width = 400
         self.rotation = 0
+        
+        self.DEFAULT_CENTER = 40
+        self.DEFAULT_WIDTH = 400
+
+        self.window_center = self.DEFAULT_CENTER
+        self.window_width = self.DEFAULT_WIDTH
 
         self.setScaledContents(False)
         self.setAlignment(Qt.AlignCenter)
@@ -152,6 +158,22 @@ class Viewer(QLabel):
             
         print(f"[VIEWER] Window updated: Center={self.window_center}, Width={self.window_width}")
         self._render_current_image()
+        
+    def reset_window(self):
+        """
+        Przywraca domyślne ustawienia brightness/contrast
+        i odświeża obraz.
+        """
+        self.window_center = self.DEFAULT_CENTER
+        self.window_width = self.DEFAULT_WIDTH
+
+        if hasattr(self, 'bright_slider'):
+            self.bright_slider.setValue(self.DEFAULT_CENTER)
+            self.contrast_slider.setValue(self.DEFAULT_WIDTH)
+
+        print(f"[VIEWER] Window reset: Center={self.window_center}, Width={self.window_width}")
+        self._render_current_image()    
+    
     
     #  keyboard 
     def keyPressEvent(self, event):
@@ -175,6 +197,10 @@ class Viewer(QLabel):
             changed = self.controller.handle_key("2")
         elif key == Qt.Key_3:
             changed = self.controller.handle_key("3")
+        elif key == Qt.Key_R:
+            changed = self.controller.handle_key("r")
+            
+        
 
         elif key == Qt.Key_Escape:
             QApplication.quit()
