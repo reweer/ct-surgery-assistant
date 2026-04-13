@@ -65,42 +65,37 @@ python3 src/main.py --study 2
 ## Sterowanie
 
 ### Klawiatura
-| Klawisz | Funkcja |
-|--------|--------|
-| **a** | poprzedni slice |
-| **d** | następny slice |
-| **1** | okno kostne ($600 / 2000$ HU) – chirurgia kostna|
+| Klawisz | Funkcja                                               |
+|--------|-------------------------------------------------------|
+| **a** | poprzedni slice                                       |
+| **d** | następny slice                                        |
+| **1** | okno kostne ($600 / 2000$ HU) – chirurgia kostna      |
 | **2** | tkanki miękkie ($40 / 400$ HU) – ocena błon śluzowych |
-| **3** | tryb zatok ($300 / 2500$ HU) |
-| **ESC** | wyjście |
-| **+**   | powiększenie obrazu                   |
-| **-**   | pomniejszenie obrazu                  |
-| **↑**   | przesunięcie widoku w górę            |
-| **↓**   | przesunięcie widoku w dół             |
-| **←**   | przesunięcie widoku w lewo            |
-| **→**   | przesunięcie widoku  w prawo          |
-| **c**   | powrót do domyślnego widoku           |
-| **ESC** | wyjście                               |
+| **3** | tryb zatok ($300 / 2500$ HU)                          |
+| **+**   | powiększenie obrazu (20% na krok)                     |
+| **-**   | pomniejszenie obrazu (20% na krok)                    |
+| **↑**   | przesunięcie widoku w górę                            |
+| **↓**   | przesunięcie widoku w dół                             |
+| **←**   | przesunięcie widoku w lewo                            |
+| **→**   | przesunięcie widoku w prawo                           |
+| **c**   | powrót do domyślnego widoku                           |
+| **ESC** | wyjście                                               |
 
 ### Komendy Głosowe (Język Angielski)
 Mów wyraźnie do mikrofonu po pojawieniu się komunikatu `🎤 Voice thread running...`.
 
-| Komenda | Funkcja | Przykład |
-|--------|--------|--------|
-| **Next / Previous** | Przeskok o 1 slice | "next", "back" |
-| **Next X / Back X** | Przeskok o X sliców | "next five", "back twenty" |
-| **Slice X** | Skok do konkretnego numeru | "slice fifty", "slice 10" |
-| **First / Last / Middle** | Skok do granic badania | "first slice", "middle slice" |
-| **Bone / Soft / Sinus** | Zmiana okna widoku | "bone", "soft", "sinus" |
-| **Brighter / Darker** | Płynna zmiana jasności o $50$ HU | "brighter" ,"darker" |
-| **Contrast up / Contrast down** | Płynna zmiana kontrastu o $100$ HU | "contrast up" ,"contrast up" |
-| **Zoom in**               | Powiększenie obrazu                         | "zoom in"                     |
-| **Zoom out**              | Pomniejszenie obrazu                        | "zoom out"                    |
-| **Left**                  | Przesunięcie widoku w lewo                  | "left"                        |
-| **Right**                 | Przesunięcie widoku w prawo                 | "right"                       |
-| **Up**                    | Przesunięcie widoku w górę                  | "up"                          |
-| **Down**                  | Przesunięcie widoku w dół                   | "down"                        |
-| **Center**                | Powrót do domyślnego widoku (środek obrazu) | "center"                      |
+| Komenda                         | Funkcja                                     | Przykład                       |
+|---------------------------------|---------------------------------------------|--------------------------------|
+| **Next / Previous**             | Przeskok o 1 slice                          | "next", "back"                 |
+| **Next X / Back X**             | Przeskok o X sliców                         | "next five", "back twenty"     |
+| **Slice X**                     | Skok do konkretnego numeru                  | "slice fifty", "slice 10"      |
+| **First / Last / Middle**       | Skok do granic badania                      | "first slice", "middle slice"  |
+| **Bone / Soft / Sinus**         | Zmiana okna widoku                          | "bone", "soft", "sinus"        |
+| **Brighter / Darker**           | Płynna zmiana jasności o $50$ HU            | "brighter", "darker"           |
+| **Contrast up / Contrast down** | Płynna zmiana kontrastu o $100$ HU          | "contrast up", "contrast down" |
+| **Zoom in / Zoom out**          | Skalowanie obrazu (20% na krok)             | "zoom in", "zoom out"          |
+| **Left / Right / Up / Down**    | Przesunięcie widoku (30 px)                 | "left", "right", "up", "down"  |
+| **Center**                      | Powrót do domyślnego widoku (środek obrazu) | "center"                       |
 
 
 *Obsługiwane liczby słownie: zero - hundred, thousand.*
