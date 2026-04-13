@@ -63,19 +63,29 @@ class Viewer(QLabel):
         widget_h = self.height()
 
         scaled = pixmap.scaled(
-            widget_w,
-            widget_h,
+            int(widget_w * self.controller.zoom),
+            int(widget_h * self.controller.zoom),
             Qt.KeepAspectRatio,
             Qt.SmoothTransformation
         )
+
+        if self.controller is not None:
+            scaled_w = scaled.width()
+            scaled_h = scaled.height()
+            self.controller.clamp(
+                scaled_w,
+                scaled_h,
+                widget_w,
+                widget_h
+            )
 
         final_pixmap = QPixmap(widget_w, widget_h)
         final_pixmap.fill(Qt.black)
 
         painter = QPainter(final_pixmap)
 
-        x = (widget_w - scaled.width()) // 2
-        y = (widget_h - scaled.height()) // 2
+        x = (widget_w - scaled.width()) // 2 + int(self.controller.offset_x)
+        y = (widget_h - scaled.height()) // 2 + int(self.controller.offset_y)
 
         painter.drawPixmap(x, y, scaled)
 
@@ -169,6 +179,26 @@ class Viewer(QLabel):
         elif key == Qt.Key_Escape:
             QApplication.quit()
             return
+        elif key == Qt.Key_Plus:
+            changed = self.controller.execute_action("zoom_in")
+
+        elif key == Qt.Key_Minus:
+            changed = self.controller.execute_action("zoom_out")
+
+        elif key == Qt.Key_Left:
+            changed = self.controller.execute_action("left")
+
+        elif key == Qt.Key_Right:
+            changed = self.controller.execute_action("right")
+
+        elif key == Qt.Key_Up:
+            changed = self.controller.execute_action("up")
+
+        elif key == Qt.Key_Down:
+            changed = self.controller.execute_action("down")
+
+        elif key == Qt.Key_C:
+            changed = self.controller.execute_action("center")
 
         if changed:
             self.controller.update_view()

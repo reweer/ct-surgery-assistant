@@ -73,6 +73,14 @@ python3 src/main.py --study 2
 | **2** | tkanki miękkie ($40 / 400$ HU) – ocena błon śluzowych |
 | **3** | tryb zatok ($300 / 2500$ HU) |
 | **ESC** | wyjście |
+| **+**   | powiększenie obrazu                   |
+| **-**   | pomniejszenie obrazu                  |
+| **↑**   | przesunięcie widoku w górę            |
+| **↓**   | przesunięcie widoku w dół             |
+| **←**   | przesunięcie widoku w lewo            |
+| **→**   | przesunięcie widoku  w prawo          |
+| **c**   | powrót do domyślnego widoku           |
+| **ESC** | wyjście                               |
 
 ### Komendy Głosowe (Język Angielski)
 Mów wyraźnie do mikrofonu po pojawieniu się komunikatu `🎤 Voice thread running...`.
@@ -86,7 +94,13 @@ Mów wyraźnie do mikrofonu po pojawieniu się komunikatu `🎤 Voice thread run
 | **Bone / Soft / Sinus** | Zmiana okna widoku | "bone", "soft", "sinus" |
 | **Brighter / Darker** | Płynna zmiana jasności o $50$ HU | "brighter" ,"darker" |
 | **Contrast up / Contrast down** | Płynna zmiana kontrastu o $100$ HU | "contrast up" ,"contrast up" |
-
+| **Zoom in**               | Powiększenie obrazu                         | "zoom in"                     |
+| **Zoom out**              | Pomniejszenie obrazu                        | "zoom out"                    |
+| **Left**                  | Przesunięcie widoku w lewo                  | "left"                        |
+| **Right**                 | Przesunięcie widoku w prawo                 | "right"                       |
+| **Up**                    | Przesunięcie widoku w górę                  | "up"                          |
+| **Down**                  | Przesunięcie widoku w dół                   | "down"                        |
+| **Center**                | Powrót do domyślnego widoku (środek obrazu) | "center"                      |
 
 
 *Obsługiwane liczby słownie: zero - hundred, thousand.*

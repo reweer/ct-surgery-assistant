@@ -4,6 +4,10 @@ class Controller:
         self.model = model
         self.viewer = viewer
 
+        self.zoom = 1.0
+        self.offset_x = 0
+        self.offset_y = 0
+
     def handle_key(self, key):
         if key == "d":
             return self.execute_action("next")
@@ -16,7 +20,7 @@ class Controller:
 
         elif key == "2":
             return self.execute_action("soft")
-        
+
         elif key == "3":
             return self.execute_action("sinus")
 
@@ -105,6 +109,28 @@ class Controller:
             elif "down" in command or "decrease" in command or "less" in command:
                 return self.execute_action("contrast_down")
 
+        # Zoom + PAN
+        elif "zoom in" in command:
+            return self.execute_action("zoom_in")
+
+        elif "zoom out" in command:
+            return self.execute_action("zoom_out")
+
+        elif "left" in command:
+            return self.execute_action("left")
+
+        elif "right" in command:
+            return self.execute_action("right")
+
+        elif "up" in command:
+            return self.execute_action("up")
+
+        elif "down" in command:
+            return self.execute_action("down")
+
+        elif "center" in command:
+            return self.execute_action("center")
+
         print(f"[DEBUG] Command '{command}' not matched to any action.")
         return False
 
@@ -112,33 +138,44 @@ class Controller:
         print(f"[DEBUG] Executing action: {action} with value: {value}")
         changed = False
 
-        # --- Nawigacja po warstwach ---
+        if action in ["next", "previous", "slice", "first", "last", "middle"]:
+            self.zoom = 1.0
+            self.offset_x = 0
+            self.offset_y = 0
+
+        # Nawigacja po warstwach
         if action == "next":
             step = value if value is not None else 1
             self.model.move_by(step)
             changed = True
+
         elif action == "previous":
             step = value if value is not None else 1
             self.model.move_by(-step)
             changed = True
+
         elif action == "slice":
             if value is not None:
                 self.model.set_slice(value - 1)
                 changed = True
+
         elif action == "first":
             self.model.go_to_first()
             changed = True
+
         elif action == "last":
             self.model.go_to_last()
             changed = True
+
         elif action == "middle":
             self.model.go_to_middle()
             changed = True
 
-        # --- Obsługa okien i obrazu ---
+        # Obsługa okien i obrazu
         elif action == "bone":
             self.viewer.set_bone_window()
             changed = True
+
         elif action == "soft":
             self.viewer.set_soft_window()
             changed = True
@@ -159,8 +196,46 @@ class Controller:
         elif action == "contrast_down":
             self.viewer.change_window(width_delta=100)
             changed = True
+        # Zoom + PAN
+        elif action == "zoom_in":
+            self.zoom = min(5.0, self.zoom * 1.2)
+            changed = True
+
+        elif action == "zoom_out":
+            self.zoom = max(1.0, self.zoom / 1.2)
+            changed = True
+
+        elif action == "left":
+            self.offset_x += 30
+            changed = True
+
+        elif action == "right":
+            self.offset_x -= 30
+            changed = True
+
+        elif action == "up":
+            self.offset_y += 30
+            changed = True
+
+        elif action == "down":
+            self.offset_y -= 30
+            changed = True
+
+        elif action == "center":
+            self.zoom = 1.0
+            self.offset_x = 0
+            self.offset_y = 0
+            changed = True
 
         return changed
 
     def update_view(self):
         self.viewer.set_image(self.model.get_current_slice())
+
+    # CLAMP- ograniczenie ruchu do granic obrazu
+    def clamp(self, img_w, img_h, view_w, view_h):
+        max_x = max(0, (img_w * self.zoom - view_w) / 2)
+        max_y = max(0, (img_h * self.zoom - view_h) / 2)
+
+        self.offset_x = max(-max_x, min(self.offset_x, max_x))
+        self.offset_y = max(-max_y, min(self.offset_y, max_y))
