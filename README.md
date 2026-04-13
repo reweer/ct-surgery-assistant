@@ -104,13 +104,9 @@ Mów wyraźnie do mikrofonu po pojawieniu się komunikatu `🎤 Voice thread run
 System zawiera warstwę parsera komend, która:
 
 	•	normalizuje tekst wejściowy,
-	
 	•	ignoruje wybrane słowa typu go, please, to,
-	
 	•	obsługuje liczby zapisane cyframi i słownie,
-	
 	•	mapuje część typowych błędów rozpoznawania mowy,
-	
 	•	zamienia komendę na ustandaryzowaną akcję.
 
 Przykłady
@@ -124,6 +120,7 @@ Przykłady
 ### Obsługiwane liczby słownie
 
 Obsługiwane są podstawowe liczby słownie, m.in.:
+
 	•	zero–nineteen
 	•	twenty, thirty, …, ninety
 	•	hundred
