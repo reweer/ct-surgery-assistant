@@ -65,24 +65,40 @@ python3 src/main.py --study 2
 ## Sterowanie
 
 ### Klawiatura
-| Klawisz | Funkcja |
-|--------|--------|
-| **a** | poprzedni slice |
-| **d** | następny slice |
-| **1** | tryb **bone** (kości) |
-| **2** | tryb **soft tissue** (tkanki miękkie) |
-| **ESC** | wyjście |
+| Klawisz | Funkcja                               |
+|---------|---------------------------------------|
+| **a**   | poprzedni slice                       |
+| **d**   | następny slice                        |
+| **1**   | tryb **bone** (kości)                 |
+| **2**   | tryb **soft tissue** (tkanki miękkie) |
+| **+**   | powiększenie obrazu                   |
+| **-**   | pomniejszenie obrazu                  |
+| **↑**   | przesunięcie widoku w górę            |
+| **↓**   | przesunięcie widoku w dół             |
+| **←**   | przesunięcie widoku w lewo            |
+| **→**   | przesunięcie widoku  w prawo          |
+| **c**   | powrót do domyślnego widoku           |
+| **ESC** | wyjście                               |
 
 ### Komendy Głosowe (Język Angielski)
 Mów wyraźnie do mikrofonu po pojawieniu się komunikatu `🎤 Voice thread running...`.
 
-| Komenda | Funkcja | Przykład |
-|--------|--------|--------|
-| **Next / Previous** | Przeskok o 1 slice | "next", "back" |
-| **Next X / Back X** | Przeskok o X sliców | "next five", "back twenty" |
-| **Slice X** | Skok do konkretnego numeru | "slice fifty", "slice 10" |
-| **First / Last / Middle** | Skok do granic badania | "first slice", "middle slice" |
-| **Bone / Soft** | Zmiana okna widoku | "bone window", "soft" |
+| Komenda                   | Funkcja                                     | Przykład                      |
+|---------------------------|---------------------------------------------|-------------------------------|
+| **Next / Previous**       | Przeskok o 1 slice                          | "next", "back"                |
+| **Next X / Back X**       | Przeskok o X sliców                         | "next five", "back twenty"    |
+| **Slice X**               | Skok do konkretnego numeru                  | "slice fifty", "slice 10"     |
+| **First / Last / Middle** | Skok do granic badania                      | "first slice", "middle slice" |
+| **Bone / Soft**           | Zmiana okna widoku                          | "bone window", "soft"         |
+| **Next / Previous**       | Przeskok o 1 slice                          | "next", "back"                |
+| **Zoom in**               | Powiększenie obrazu                         | "zoom in"                     |
+| **Zoom out**              | Pomniejszenie obrazu                        | "zoom out"                    |
+| **Left**                  | Przesunięcie widoku w lewo                  | "left"                        |
+| **Right**                 | Przesunięcie widoku w prawo                 | "right"                       |
+| **Up**                    | Przesunięcie widoku w górę                  | "up"                          |
+| **Down**                  | Przesunięcie widoku w dół                   | "down"                        |
+| **Center**                | Powrót do domyślnego widoku (środek obrazu) | "center"                      |
+
 
 *Obsługiwane liczby słownie: zero - hundred, thousand.*
 
