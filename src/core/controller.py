@@ -21,15 +21,16 @@ class Controller:
         elif key == "2":
             return self.execute_action("soft")
 
+        elif key == "3":
+            return self.execute_action("sinus")
+
         return False
 
     def normalize_command(self, command):
         command = command.lower().strip()
-
         filler_words = {"go", "please", "to"}
         words = command.split()
         words = [word for word in words if word not in filler_words]
-
         return " ".join(words)
 
     def _parse_number(self, words):
@@ -74,35 +75,41 @@ class Controller:
 
         number = self._parse_number(words)
 
+        # Nawigacja
         if "first" in command:
             return self.execute_action("first")
-
         elif "last" in command:
             return self.execute_action("last")
-
         elif "middle" in command:
             return self.execute_action("middle")
-
-        # Relative movement first
         elif "next" in command:
             return self.execute_action("next", number)
-
         elif "previous" in command or "back" in command:
             return self.execute_action("previous", number)
-
-        # Absolute slice jump
         elif "slice" in command:
             if number is not None:
                 return self.execute_action("slice", number)
 
-        elif "bone" in command or "one" in command:
-            if number is None or number == 1:
-                return self.execute_action("bone")
+        # Presety okien (Windowing)
+        elif "bone" in command or ("one" in command and len(words) == 1):
+            return self.execute_action("bone")
+        elif "soft" in command or ("two" in command and len(words) == 1):
+            return self.execute_action("soft")
+        elif "sinus" in command:
+            return self.execute_action("sinus")
 
-        elif "soft" in command or "two" in command:
-            if number is None or number == 2:
-                return self.execute_action("soft")
+        # Jasność i Kontrast
+        elif "brighter" in command or "brighten" in command:
+            return self.execute_action("brighter")
+        elif "darker" in command or "darken" in command:
+            return self.execute_action("darker")
+        elif "contrast" in command:
+            if "up" in command or "increase" in command or "more" in command:
+                return self.execute_action("contrast_up")
+            elif "down" in command or "decrease" in command or "less" in command:
+                return self.execute_action("contrast_down")
 
+        # Zoom + PAN
         elif "zoom in" in command:
             return self.execute_action("zoom_in")
 
@@ -136,6 +143,7 @@ class Controller:
             self.offset_x = 0
             self.offset_y = 0
 
+        # Nawigacja po warstwach
         if action == "next":
             step = value if value is not None else 1
             self.model.move_by(step)
@@ -148,7 +156,7 @@ class Controller:
 
         elif action == "slice":
             if value is not None:
-                self.model.set_slice(value - 1)  # Humans use 1-based indexing
+                self.model.set_slice(value - 1)
                 changed = True
 
         elif action == "first":
@@ -163,6 +171,7 @@ class Controller:
             self.model.go_to_middle()
             changed = True
 
+        # Obsługa okien i obrazu
         elif action == "bone":
             self.viewer.set_bone_window()
             changed = True
@@ -170,7 +179,24 @@ class Controller:
         elif action == "soft":
             self.viewer.set_soft_window()
             changed = True
-
+        elif action == "sinus":
+            self.viewer.set_sinus_window()
+            changed = True
+        elif action == "brighter":
+            # W medycynie zmniejszenie Center rozjaśnia obraz
+            self.viewer.change_window(center_delta=-50)
+            changed = True
+        elif action == "darker":
+            self.viewer.change_window(center_delta=50)
+            changed = True
+        elif action == "contrast_up":
+            # Mniejsza szerokość okna (Width) zwiększa kontrast
+            self.viewer.change_window(width_delta=-100)
+            changed = True
+        elif action == "contrast_down":
+            self.viewer.change_window(width_delta=100)
+            changed = True
+        # Zoom + PAN
         elif action == "zoom_in":
             self.zoom = min(5.0, self.zoom * 1.2)
             changed = True
@@ -206,6 +232,7 @@ class Controller:
     def update_view(self):
         self.viewer.set_image(self.model.get_current_slice())
 
+    # CLAMP- ograniczenie ruchu do granic obrazu
     def clamp(self, img_w, img_h, view_w, view_h):
         max_x = max(0, (img_w * self.zoom - view_w) / 2)
         max_y = max(0, (img_h * self.zoom - view_h) / 2)
