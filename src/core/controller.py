@@ -26,6 +26,9 @@ class Controller:
 
         elif key == "3":
             return self.execute_action("sinus")
+        
+        elif key == "r":
+            return self.execute_action("restore_view")
 
         return False
 
@@ -232,6 +235,15 @@ class Controller:
                 return {"action": "contrast_up"}
             if "down" in words or "decrease" in words or "less" in words:
                 return {"action": "contrast_down"}
+            
+        if (
+            "restore" in words and "view" in words
+        ) or (
+            "default" in words and "view" in words
+        ) or (
+            "restart" in words and "view" in words
+        ):
+            return {"action": "restore_view"}
 
         # zoom / pan
         if "zoom" in words and "in" in words:
@@ -340,6 +352,10 @@ class Controller:
 
         elif action == "contrast_down":
             self.viewer.change_window(width_delta=100)
+            changed = True
+            
+        elif action == "restore_view":
+            self.viewer.reset_window()
             changed = True
 
         # zoom / pan

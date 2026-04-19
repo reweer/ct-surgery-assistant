@@ -17,6 +17,8 @@ def apply_window(image, center, width):
 
     image = image.astype("float32")
 
+    width = max(1, width)
+    
     min_val = center - width / 2
     max_val = center + width / 2
 
