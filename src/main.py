@@ -62,14 +62,15 @@ def main():
     def check_voice():
 
         changed = False
+        had_voice = False
 
         while not voice.commands.empty():
             command = voice.commands.get()
-
+            had_voice = True
             if controller.handle_voice(command):
                 changed = True
 
-        if changed:
+        if had_voice or changed:
             controller.update_view()
 
     timer = QTimer()

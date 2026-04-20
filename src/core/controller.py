@@ -10,6 +10,7 @@ class Controller:
         self.zoom = 1.0
         self.offset_x = 0
         self.offset_y = 0
+        self.last_voice_transcript = ""
 
     def handle_key(self, key):
         if key == "d":
@@ -272,6 +273,7 @@ class Controller:
         return None
 
     def handle_voice(self, command):
+        self.last_voice_transcript = (command or "").strip()
         normalized = self.normalize_command(command)
         parsed = self.parse_command(normalized)
 
