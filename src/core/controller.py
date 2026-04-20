@@ -10,6 +10,7 @@ class Controller:
         self.zoom = 1.0
         self.offset_x = 0
         self.offset_y = 0
+        self.last_voice_transcript = ""
 
     def handle_key(self, key):
         if key == "d":
@@ -26,6 +27,9 @@ class Controller:
 
         elif key == "3":
             return self.execute_action("sinus")
+        
+        elif key == "r":
+            return self.execute_action("restore_view")
 
         return False
 
@@ -232,6 +236,15 @@ class Controller:
                 return {"action": "contrast_up"}
             if "down" in words or "decrease" in words or "less" in words:
                 return {"action": "contrast_down"}
+            
+        if (
+            "restore" in words and "view" in words
+        ) or (
+            "default" in words and "view" in words
+        ) or (
+            "restart" in words and "view" in words
+        ):
+            return {"action": "restore_view"}
 
         # zoom / pan
         if "zoom" in words and "in" in words:
@@ -260,6 +273,7 @@ class Controller:
         return None
 
     def handle_voice(self, command):
+        self.last_voice_transcript = (command or "").strip()
         normalized = self.normalize_command(command)
         parsed = self.parse_command(normalized)
 
@@ -340,6 +354,10 @@ class Controller:
 
         elif action == "contrast_down":
             self.viewer.change_window(width_delta=100)
+            changed = True
+            
+        elif action == "restore_view":
+            self.viewer.reset_window()
             changed = True
 
         # zoom / pan
